@@ -1,0 +1,6 @@
+DB_USER=admin
+DB_PASSWORD=MySuperAwesomePassword
+DB_NAME=api
+POSTGRES_USERNAME=admin
+POSTGRES_PASSWORD=MySuperAwesomePassword
+DB=api
