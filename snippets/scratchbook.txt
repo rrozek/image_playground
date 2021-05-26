@@ -1,0 +1,57 @@
+identify -verbose FILE | grep "Clipping path:"
+
+move files to separate directory IF they have clipping path
+exiftool -if "$ClippingPathName" "-Directory=/path/to/ClippingPathImages/" /path/to/files/
+
+
+# PNG TO SVG PATH alpha
+convert easy.png -set colorspace RGB -alpha extract easy_alpha.png
+convert easy_alpha.png easy_alpha.svg
+
+
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ ../../../Image-ExifTool-12.22/exiftool -config ../../../Image-ExifTool-12.22/config_files/photoshop_paths.config -allpaths ../tiff_with_clip_path/7386_Hauptbild.tif
+Path 7d0                        : Freisteller
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ ../../../Image-ExifTool-12.22/exiftool -config ../../../Image-ExifTool-12.22/config_files/photoshop_paths.config -allpaths# ../tiff_with_clip_path/7386_Hauptbild.tif
+Path 7d0                        : (Binary data 665 bytes, use -b option to extract)
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ ../../../Image-ExifTool-12.22/exiftool -config ../../../Image-ExifTool-12.22/config_files/photoshop_paths.config -o out.exv -allpaths# ../tiff_with_clip_path/7386_Hauptbild.tif
+    1 image files created
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ ../../../Image-ExifTool-12.22/exiftool -config ../../../Image-ExifTool-12.22/config_files/photoshop_paths.config -allpaths ../tiff_with_clip_path/7386_Hauptbild.tif
+Path 7d0                        : Freisteller
+
+
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ ../../../Image-ExifTool-12.22/exiftool -config ../../../Image-ExifTool-12.22/config_files/photoshop_paths.config -allpathpix ../tiff_with_clip_path/7386_Hauptbild.tif
+Path Pix 7d0                    : Freisteller - (173.243,975.336) (429.932,831.077) (979.138,523.052) (1176.87,413.724) (1497.96,235.895) (1823.58,50.3546) (1843.99,49.9009) (1879.82,74.8513) (1905.22,115.226) (1913.83,158.322) (1905.22,178.282) (1858.05,210.038) (1678,313.469) (1377.78,487.668) (1058.05,674.116) (719.728,868.73) (156.463,1193.54) (143.311,1200.34) (130.159,1199.44) (81.1793,1149.99) (53.0612,1043.84) (146.485,990.76)
+
+
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ identify -quiet -format "%[8BIM:1999,2998:#1]" ../tiff_with_clip_path/7386_Hauptbild.tif
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1282">
+<g>
+<path fill-rule="evenodd" style="fill:#000000;stroke:#000000;stroke-width:0;stroke-antialiasing:false" d="
+M 173.243 975.336
+L 429.932 831.077
+L 979.138 523.052
+L 1176.87 413.724
+L 1497.96 235.895
+L 1823.58 50.3546
+C 1823.58 50.3546 1834.47 46.2718 1843.99 49.9009
+C 1853.51 53.5301 1866.67 59.4274 1879.82 74.8513
+C 1892.97 90.2753 1903.85 110.236 1905.22 115.226
+C 1906.58 120.216 1914.74 149.703 1913.83 158.322
+C 1912.93 166.941 1908.84 173.292 1905.22 178.282
+C 1901.59 183.272 1862.59 207.316 1858.05 210.038
+C 1853.51 212.759 1678 313.469 1678 313.469
+L 1377.78 487.668
+L 1058.05 674.116
+L 719.728 868.73
+L 156.463 1193.54
+C 156.463 1193.54 148.299 1198.98 143.311 1200.34
+C 138.322 1201.7 138.775 1203.97 130.159 1199.44
+C 121.542 1194.9 97.9592 1173.58 81.1793 1149.99
+C 64.3991 1126.4 37.6416 1068.79 53.0612 1043.84
+C 84.8073 1022.97 129.705 998.472 146.485 990.76
+C 163.265 983.048 173.243 975.336 173.243 975.336
+"/>
+</g>
+</svg>
+jakub_rojek@a0087:~/repos/pbs/image_playground/data/png_with_alpha$ identify -quiet -format "%[8BIM:1999,2998:#2]" ../tiff_with_clip_path/7386_Hauptbild.tif
