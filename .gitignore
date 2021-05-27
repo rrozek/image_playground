@@ -76,7 +76,7 @@ target/
 celerybeat-schedule
 
 # dotenv
-.env
+dockerized/app/.env
 local.env
 
 # virtualenv
@@ -103,4 +103,9 @@ db.sqlite3
 
 #pycharm
 .idea
+
+
+.env.dev
+.env.prod
+.env.prod.db
 
