@@ -2,9 +2,13 @@ from django.urls import path
 from django.conf import settings
 from rest_framework import routers
 
+from .views import processor
 app_name = 'api'
 
 urlpatterns = [
+    path('png/tiff/', processor.Png2Tiff.as_view(), name='png2tiff'),
+    path('tiff/png/', processor.Tiff2Png.as_view(), name='tiff2png'),
+
 ]
 
 if settings.DEBUG:

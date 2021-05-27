@@ -13,6 +13,7 @@ import os
 from os.path import abspath, dirname, exists, join
 
 from pathlib import Path
+from .env_loader import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = dirname(dirname(abspath(__file__)))
@@ -22,12 +23,12 @@ BASE_DIR = dirname(dirname(abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ut9%llajsanc6bd)ueo(9cr7sfy_t5j3lu^cu5bv9a_7%i$a%6'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
 
 # Application definition
@@ -70,7 +71,7 @@ MIDDLEWARE = [
 ]
 
 
-ROOT_URLCONF = 'api.urls'
+ROOT_URLCONF = 'dj_app.urls'
 
 TEMPLATES = [
     {
@@ -88,31 +89,24 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'api.wsgi.application'
+WSGI_APPLICATION = 'dj_app.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+PSQL_SSL_MODE = 'prefer' if DEBUG else 'require'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DB_NAME'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'USER': env('DB_USER'),
+        'HOST': env('DB_HOST'),
+        'PORT': env.int('DB_PORT', default=5432),
+        'OPTIONS': {'sslmode': PSQL_SSL_MODE},
     }
 }
-
-# PSQL_SSL_MODE = 'prefer' if DEBUG else 'require'
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env('DB_NAME', default='wbtcv_api'),
-#         'PASSWORD': env('DB_PASSWORD', default='MySuperAwesomePassword'),
-#         'USER': env('DB_USER', default='wbtcv_admin'),
-#         'HOST': env('DB_HOST', default='127.0.0.1'),
-#         'PORT': env.int('DB_PORT', default=5432),
-#         'OPTIONS': {'sslmode': PSQL_SSL_MODE},
-#     }
-# }
 
 
 # Password validation
@@ -173,9 +167,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
