@@ -1,4 +1,6 @@
+import base64
 import json
+import os
 import string
 import logging
 import sys
@@ -13,6 +15,7 @@ from functools import lru_cache, wraps
 from rest_framework.response import Response
 from rest_framework import status as _status
 
+from api.exceptions import ParamError
 
 VALID_PIN_CHARACTERS = [s for s in string.digits]
 
@@ -89,7 +92,23 @@ def session_token(request_data: dict) -> str:
 
 
 def source_hash(data: str) -> str:
-    return sha256(data).hexdigest()
+    return sha256(data.encode('utf-8')).hexdigest()
+
+
+def file_hash(filepath: str) -> str:
+    with open(filepath, 'rb') as file:
+        return sha256(file.read()).hexdigest()
+
+
+def encode_base64(filepath: str) -> str:
+    if not os.path.exists(filepath):
+        errorstring = f'expected output file: {filepath} does not exist'
+        logger.error(errorstring)
+        raise ParamError(ErrorCode.NotFound, errorstring)
+    with open(filepath, 'rb') as file:
+        encoded = f'data:image/{filepath.split(".")[-1]};base64,'
+        encoded = encoded + base64.b64encode(file.read()).decode('utf-8')
+        return encoded
 
 
 def xresponse(status=_status.HTTP_200_OK, error_code=ErrorCode.Ok, msg='', **kwargs) -> Response:

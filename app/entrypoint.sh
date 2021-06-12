@@ -2,16 +2,9 @@
 
 set -e
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
-
-    while ! nc -z $DB_HOST $DB_PORT; do
-      sleep 0.1
-    done
-
-    echo "PostgreSQL started"
-fi
+cd /usr/src/app
+mkdir /gimp/scripts
+cp snippets/svg-clip-path.scm /gimp/scripts/
 
 python manage.py makemigrations
 python manage.py migrate

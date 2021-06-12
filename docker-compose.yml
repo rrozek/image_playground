@@ -9,7 +9,6 @@ services:
       - /home/jakub_rojek/Pictures:/usr/src/images
     ports:
       - 8000:8000
-    privileged: true
     env_file:
       - ./.env
     depends_on:
