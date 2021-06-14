@@ -14,9 +14,9 @@ ENV PYTHONUNBUFFERED 1
     libwebp-dev perl-dev lcms2-dev inotify-tools
 
 # install imagemagick
-RUN wget https://download.imagemagick.org/ImageMagick/download/ImageMagick-6.9.12-14.tar.gz && \
-    tar -xzf ImageMagick-6.9.12-14.tar.gz && \
-    cd ImageMagick-6.9.12-14 && \
+RUN wget https://download.imagemagick.org/ImageMagick/download/ImageMagick-6.9.12-15.tar.gz && \
+    tar -xzf ImageMagick-6.9.12-15.tar.gz && \
+    cd ImageMagick-6.9.12-15 && \
     ./configure --prefix /usr/local && \
     make -j3 && \
     make install && \
