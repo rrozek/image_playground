@@ -5,11 +5,13 @@ import base64
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.urls.base import resolve
+from django.views.decorators.csrf import csrf_exempt
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView, Request
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
+from ..drf_auth_override import CsrfExemptSessionAuthentication
 from ..utils import xresponse, get_pretty_logger, file_hash, ErrorCode, source_hash, encode_base64
 from ..exceptions import ParamError
 from ..serializers import ImgSerializer
@@ -41,6 +43,7 @@ class Png2Tiff(APIView):
     }
     """
     serializer_class = ImgSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
     @swagger_auto_schema(operation_description="convert png to tiff mapping alpha channel to clipping path ",
                          request_body=serializer_class,
@@ -125,7 +128,6 @@ class Png2Tiff(APIView):
         )
 
 
-
 class Tiff2Png(APIView):
     """
     expected data:
@@ -136,6 +138,7 @@ class Tiff2Png(APIView):
     """
 
     serializer_class = ImgSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
     @swagger_auto_schema(operation_description="convert tiff to png mapping clipping path to alpha channel",
                          request_body=serializer_class,
@@ -187,6 +190,7 @@ class Eps2Png(APIView):
     """
 
     serializer_class = ImgSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
     @swagger_auto_schema(operation_description="convert eps to png mapping clipping path to alpha channel",
                          request_body=serializer_class,
@@ -228,7 +232,6 @@ class Eps2Png(APIView):
         )
 
 
-
 class Png2Eps(APIView):
     """
     expected data:
@@ -238,6 +241,8 @@ class Png2Eps(APIView):
     }
     """
     serializer_class = ImgSerializer
+
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
     @swagger_auto_schema(operation_description="convert png to eps mapping alpha channel to clipping path ",
                          request_body=serializer_class,
