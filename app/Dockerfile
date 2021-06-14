@@ -8,14 +8,15 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
   RUN apk update \
-    && apk add wget alpine-sdk zlib zlib-dev imagemagick-dev potrace libxml2 xmlto libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev	perl-dev ghostscript-dev libwebp-dev libtool tiff-dev lcms2-dev gimp pkgconfig postgresql-dev gcc python3-dev musl-dev bash inotify-tools ghostscript
+    && apk add wget bash zlib pkgconfig gcc python3-dev musl-dev gimp \
+    alpine-sdk potrace libxml2-dev libpng-dev libjpeg-turbo-dev freetype-dev fontconfig-dev	ghostscript-dev libtool tiff-dev ghostscript \
+    libwebp-dev perl-dev lcms2-dev inotify-tools
 
 # install imagemagick
-RUN wget https://download.imagemagick.org/ImageMagick/download/ImageMagick.tar.gz && \
-    tar -xzf ImageMagick.tar.gz && \
-    cd ImageMagick-7.0.11-14 && \
+RUN wget https://download.imagemagick.org/ImageMagick/download/ImageMagick-6.9.12-14.tar.gz && \
+    tar -xzf ImageMagick-6.9.12-14.tar.gz && \
+    cd ImageMagick-6.9.12-14 && \
     ./configure --prefix /usr/local && \
     make -j3 && \
     make install && \
@@ -31,12 +32,13 @@ COPY requirements.txt /usr/src/app
 COPY gimp_rootfs /
 RUN pip install -r requirements.txt
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh .
-EXPOSE 8000
 # copy project
 COPY . /usr/src/app
-
-# run entrypoint.sh
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN apk add py3-gunicorn
+# copy entrypoint.sh
+COPY ./entrypoint.sh .
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+
+EXPOSE 8000
+
+CMD ["gunicorn", "-w", "3", "--bind", "0.0.0.0:8000", "--access-logfile", "-", "dj_app.wsgi:application"]

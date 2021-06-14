@@ -7,9 +7,12 @@ app_name = 'api'
 
 urlpatterns = [
     path('png/tiff/', processor.Png2Tiff.as_view(), name='png2tiff'),
+    path('png/eps/', processor.Png2Eps.as_view(), name='png2eps'),
     path('tiff/png/', processor.Tiff2Png.as_view(), name='tiff2png'),
-
+    path('eps/png/', processor.Eps2Png.as_view(), name='eps2png'),
 ]
+
+
 
 if settings.DEBUG:
     from django.urls import re_path

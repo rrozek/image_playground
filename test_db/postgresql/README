@@ -1,6 +1,0 @@
-To run execute build and run commands
-`sudo docker build -t pbs_img .`
-`sudo docker run --env-file env-file pbs_img`
-
-sudo docker exec -i <container_id> pg_dumpall --username postgre  > dump.sql
-sudo docker exec -i <container_id> psql --username postgres < dump.sql

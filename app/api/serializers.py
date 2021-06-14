@@ -18,6 +18,7 @@ class HashField(serializers.CharField):
 class ImgSerializer(serializers.Serializer):
     source = Base64ImageField(required=True)
     sha256 = HashField(required=True)
+    output = serializers.ChoiceField(['url', 'base64'], required=True)
 
 
 

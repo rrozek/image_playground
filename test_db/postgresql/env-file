@@ -1,3 +1,0 @@
-POSTGRES_USERNAME=pbs_img_api_admin
-POSTGRES_PASSWORD=MySuperAwesomePassword
-DB=pbs_img_api
