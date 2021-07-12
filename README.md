@@ -43,31 +43,27 @@ There is simple testing app provided via swagger in `api/swagger` endpoint
 ## Using API
 
 Basically API expects data in following format:
-```json
-{
-    "source": "<base64 encoded uri>",
-    "sha256": "<sha256 hexdigest to verify data integrity>",
-    "output": "url|base64"
-}
 ```
-`source` is always base64 encoded uri  
-`sha256` is hexdigest of imagefile for server-side integrity verification  
-`output` is expected output format. Two options are supported currently:  
-1. `url` API will return URL where result image can be accessed/downloaded  
-2. `base64` API will return base64 encoded URI with resulting image data  
+POST /api/png/tiff/?output=url HTTP/1.1
+Host: 127.0.0.1:8000
+Content-Type: multipart/form-data; 
+```
 
-Response from API is in form:  
-```json
-{
-    "result": "success",
-    "error_code": 0,
-    "msg": "",
-    "data": {
-        "result": "http://127.0.0.1:8000/media/2b14588d-1d91-4357-ae33-a9f76d2ef7da.png"
-    }
-}
+```bash
+curl -X POST "http://127.0.0.1:8000/api/png/tiff/?output=url" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H  "X-CSRFToken: QZE4jqhWqdiWyNZYYfoJx72G1o35HFlqYLeQfU3JMC8cEhEPlCH8F1ZC0oXLZahJ" -F "source=@174H_Cremeschminke_FACE_PAINT_HALLOWEEN_03.png;type=image/png"
 ```
-If `error_code` == 0 then `msg` is empty. Otherwise, short error description is provided.  
-  
-## Example
-Example payloads are provided in repo in `app/samples` directory (`png2tiff.json` and `tiff2png.json`)
+
+accepted `output` values are: ['url', 'image']
+
+in case of `url` request, 303 with Location is returned
+```
+HTTP/1.1 303 See Other
+Location: http://127.0.0.1:8000/media/174H_Cremeschminke_FACE_PAINT_HALLOWEEN_03_by6tc5K.tiff
+```
+
+in case of `image` request, image is returned with content type valid for given API endpoint (image/png, image/tiff, image/postscript)
+```
+HTTP/1.1 200 OK
+Content-Type: image/tiff
+Content-Length: 42428190
+```
