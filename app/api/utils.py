@@ -78,19 +78,6 @@ class ErrorCode(ChoiceEnum):
     DatabaseError = 100
 
 
-def request_hash(request_data: dict) -> str:
-    sha = sha256()
-    sha.update(json.dumps(request_data, sort_keys=True).encode('utf-8'))
-    return sha.hexdigest()
-
-
-def session_token(request_data: dict) -> str:
-    sha = sha256()
-    sha.update(json.dumps(request_data, sort_keys=True).encode('utf-8'))
-    sha.update(uuid4().hex.encode('utf-8'))
-    return sha.hexdigest()
-
-
 def source_hash(data: str) -> str:
     return sha256(data.encode('utf-8')).hexdigest()
 

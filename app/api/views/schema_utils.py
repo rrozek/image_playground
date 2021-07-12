@@ -1,10 +1,6 @@
 from drf_yasg import openapi
 
 
-hash_item = openapi.Items(
-    type=openapi.TYPE_STRING, pattern='base58 representation of sha256 hash(xpub, recovery_key, instant_key)'
-)
-
 result_schema = openapi.Schema(type=openapi.TYPE_STRING, description='success or error')
 session_token_schema = openapi.Schema(type=openapi.TYPE_STRING, description='token for follow-up requests')
 msg_schema = openapi.Schema(type=openapi.TYPE_STRING, description='error description or empty string')
