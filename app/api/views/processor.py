@@ -155,6 +155,11 @@ class Png2Tiff(ImgProcessAPIView):
         process.wait(20)
         logger.info(f'process resultcode: {process.returncode}')
 
+        os.remove(input_filepath)
+        os.remove(output_alpha_filepath)
+        os.remove(output_svg_filepath)
+        os.remove(output_tiff_tmp_filepath)
+
         return output_filepath, output_filename
 
 
@@ -178,11 +183,12 @@ class Tiff2Png(ImgProcessAPIView):
         logger.info(f'command: {command}')
         logger.info(f'process resultcode: {process.returncode}')
 
+        os.remove(input_filepath)
+
         return output_filepath, output_filename
 
 
 class Eps2Png(ImgProcessAPIView):
-
     @property
     def return_format(self):
         return 'png'
@@ -202,6 +208,7 @@ class Eps2Png(ImgProcessAPIView):
         logger.info(f'command: {command}')
         logger.info(f'process resultcode: {process.returncode}')
 
+        os.remove(input_filepath)
         return output_filepath, output_filename
 
 
@@ -209,7 +216,7 @@ class Png2Eps(ImgProcessAPIView):
 
     @property
     def return_format(self):
-        return 'eps'
+        return 'postscript'
 
     def process_request(self, clean_data, request):
 
@@ -227,8 +234,10 @@ class Png2Eps(ImgProcessAPIView):
         output_svg_filepath = f'{"".join(output_alpha_filepath.split(".")[:-1])}.svg'
         command_alpha_svg = f'convert {output_alpha_filepath} {output_svg_filepath}'
 
-        output_tiff_tmp_filepath = os.path.join(clean_data['storage'], f"{''.join(clean_data['filename'].split('.')[:-1])}_tmp.eps")
+        output_tiff_tmp_filepath = os.path.join(clean_data['storage'], f"{''.join(clean_data['filename'].split('.')[:-1])}_tmp.tiff")
+        output_filepath_tiff = os.path.join(clean_data['storage'], f"{''.join(clean_data['filename'].split('.')[:-1])}_final.tiff")
         command_png_to_tiff = f'convert {input_filepath} {output_tiff_tmp_filepath}'
+        command_tiff_to_eps = f'convert {output_filepath_tiff} {output_filepath}'
 
         logger.info(f'command: {command_extract_alpha}')
         process = subprocess.Popen(
@@ -257,7 +266,7 @@ class Png2Eps(ImgProcessAPIView):
         process.wait(10)
         logger.info(f'process resultcode: {process.returncode}')
 
-        gimp_command = f"gimp -i -b '(svg-clip-path \"{output_tiff_tmp_filepath}\" \"{output_svg_filepath}\" \"{output_filepath}\" )' -b '(gimp-quit 0)'"
+        gimp_command = f"gimp -i -b '(svg-clip-path \"{output_tiff_tmp_filepath}\" \"{output_svg_filepath}\" \"{output_filepath_tiff}\" )' -b '(gimp-quit 0)'"
 
         logger.info(f'command: {gimp_command}')
         process = subprocess.Popen(
@@ -268,5 +277,20 @@ class Png2Eps(ImgProcessAPIView):
         )
         process.wait(20)
         logger.info(f'process resultcode: {process.returncode}')
+
+        logger.info(f'command: {command_tiff_to_eps}')
+        process = subprocess.Popen(
+            command_tiff_to_eps.split(' '),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        process.wait(10)
+        logger.info(f'process resultcode: {process.returncode}')
+
+        os.remove(input_filepath)
+        os.remove(output_alpha_filepath)
+        os.remove(output_svg_filepath)
+        os.remove(output_tiff_tmp_filepath)
+        os.remove(output_filepath_tiff)
 
         return output_filepath, output_filename
