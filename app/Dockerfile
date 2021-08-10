@@ -41,4 +41,4 @@ ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
 EXPOSE 8000
 
-CMD ["gunicorn", "-w", "3", "--bind", "0.0.0.0:8000", "--access-logfile", "-", "dj_app.wsgi:application"]
+CMD ["gunicorn", "-w", "3", "--bind", "0.0.0.0:8000", "--timeout", "60", "--access-logfile", "-", "dj_app.wsgi:application"]

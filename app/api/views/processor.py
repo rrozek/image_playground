@@ -35,7 +35,9 @@ def validate_payload(serializer_class, payload: dict) -> dict:
     img_serializer = serializer_class(data=payload)
     img_serializer.is_valid(raise_exception=True)
     clean_data = img_serializer.validated_data
-    filename = default_storage.save(clean_data['source'].name.replace(' ', '_'), clean_data['source'])
+    name = ''.join(clean_data['source'].name.split('.')[:-1]).replace('.', '_').replace(' ', '_')
+    suffix = ''.join(clean_data['source'].name.split('.')[-1:])
+    filename = default_storage.save(f'{name}.{suffix}', clean_data['source'])
 
     clean_data['filename'] = filename
     clean_data['storage'] = default_storage.location
